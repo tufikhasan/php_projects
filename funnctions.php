@@ -6,7 +6,7 @@ function encryptDecrypt( $userInput, $main, $replace ) {
     for ( $i = 0; $i < strlen( $userInput ); $i++ ) {
         $char = $userInput[$i];
         $position = strpos( $main, $char );
-        if ( $main !== false ) {
+        if ( $position !== false ) {
             $replacement = $replace[$position];
         } else {
             $replacement = $char;
