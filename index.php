@@ -1,73 +1,64 @@
-<?php include "./function.php"; ?>
+<?php include "./class.php";?>
 <!doctype html>
 <html lang="en">
 
 <head>
-  <title>Password Generator</title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hex to RGB/RGBA - Color Converter</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Font-awesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
 </head>
 
-<body>
-  <div class="container mt-5">
-    <div class="row">
-      <div class="card mx-auto p-2" style='width:400px'>
-        <h2 class="text-center my-3">Password Generator</h2>
-        <div style="height: 30px;">
-          <p class="text-center font-weight-bold">
-            <?php
-            if ($_SERVER['REQUEST_METHOD'] == "POST") {
-              $input = $_POST['password'];
-              if (!empty($input)) {
-                if (!is_numeric($input)) {
-                  echo "<span class='text-danger'>Please enter only numbers</span>";
-                } else {
-                  if ($input >= 4 && $input < 26) {
-                    $upper = isset($_POST['capital']) ? true : false;
-                    $number = isset($_POST['number']) ? true : false;
-                    $special = isset($_POST['special']) ? true : false;
+<body style="background: url('./bg.png') no-repeat center;background-size: cover;">
+    <div class="container d-flex align-items-start justify-content-center mt-5" style="height: 100vh;">
+        <div class="card p-3" style="width: 380px;background: rgba(0,0,0,0.3);">
+            <h4 class="text-center text-light m-3">Hexa to RGB & RGBA</h4>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" class="was-validated">
+                <div class="form-group">
+                    <input maxlength="7" class="form-control text-light" type="text" name="colorCode" style="background: rgba(0,0,0,0.3);" value="#000000" required>
+                    <div class="valid-feedback">&#10004;</div>
+                    <div class="invalid-feedback">Please enter hexadecimal color code</div>
+                </div>
+                <input class="btn btn-primary btn-block" type="submit" value="Convert Hexadecimal to RGB">
+            </form>
+            <div>
+                <h6 class="mt-3 mb-1 text-light">RGB :</h6>
+                <div class="input-group">
+                    <input type="text" class="form-control text-light" style="background: rgba(0,0,0,0.3)" id="rgb" value="<?php echo $rgb; ?>">
+                    <div class="input-group-append">
+                        <span style="cursor: pointer;" class="input-group-text" onclick="copyToClipboard('rgb')"><i class="far fa-copy"></i></span>
+                    </div>
+                </div>
+                <h6 class="mt-3 mb-1 text-light">RGBA :</h6>
+                <div class="input-group">
+                    <input type="text" class="form-control text-light" style="background: rgba(0,0,0,0.3)" id="rgba"  value="<?php echo $rgba; ?>">
+                    <div class="input-group-append">
+                        <span style="cursor: pointer;" class="input-group-text" onclick="copyToClipboard('rgba')"><i class="far fa-copy"></i></span>
+                    </div>
+                </div>
+                <div style="background: <?php echo $rgb; ?>; height: 50px;" class="mt-3 w-50 mx-auto"></div>
+            </div>
 
-                    $result = generatePassword($input, $upper, $number, $special);
-                    echo "<span class='text-success'>$result</span>";
-                  } else {
-                    echo "<span class='text-warning'>Password length must be between 4 to 25</span>";
-                  }
-                }
-              } else {
-                echo "<span class='text-warning'>Empty value</span>";
-              }
-            }
-            ?>
-          </p>
         </div>
-        <form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Enter a number between 4 to 25" name="password">
-          </div>
-          <div class="form-group form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" name="capital" type="checkbox"> Capital Letter
-            </label>
-          </div>
-          <div class="form-group form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" name="number" type="checkbox"> Numbers
-            </label>
-          </div>
-          <div class="form-group form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" name="special" type="checkbox"> Special character
-            </label>
-          </div>
-          <button type="submit" class="btn btn-secondary">Generate password</button>
-        </form>
-      </div>
     </div>
-  </div>
+    <script>
+        function copyToClipboard(id) {
+            // Get the text field
+            let copyText = document.getElementById(id);
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+        }
+    </script>
 </body>
 
 </html>
+
+<?php #echo substr( "123456789", 0, 6 ); ?>
