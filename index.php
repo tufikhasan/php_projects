@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
 </head>
 
-<body style="background: url('./bg.png') no-repeat center;background-size: cover;">
+<body style="background: url('https://static.vecteezy.com/system/resources/previews/002/072/154/original/colorful-dynamic-background-free-vector.jpg') no-repeat center;background-size: cover;">
     <div class="container d-flex align-items-start justify-content-center mt-5" style="height: 100vh;">
         <div class="card p-3" style="width: 380px;background: rgba(0,0,0,0.3);">
             <h4 class="text-center text-light m-3">Hexa to RGB & RGBA</h4>
