@@ -1,43 +1,53 @@
-<?php
-include_once "./data/data.php";
-include_once "./function.php";
-$obj = new Products();
-?>
-<!doctype html>
-<html lang="en">
-
-<head>
-    <title>Products filters</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="https://icon-library.com/images/icon-for-products/icon-for-products-20.jpg" type="image/x-icon">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-
-<body>
-    <h1 class="text-center text-dark font-weight-bold text-capitalize my-3"><a href="./">Products Filters</a></h1>
-    <div class="container">
-        <div class="row">
-            <form class="form-inline mx-auto" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="get">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="category" placeholder="Filter by category...">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary mb-2">Filter</button>
-                    </div>
+<?php require_once('./template/header.php'); ?>
+<!-- Properties display -->
+<div class='properties'>
+  <?php
+  if (count($_SESSION['properties']) != 0) {
+    foreach ($properties as $key => $property) {
+      echo <<<EOD
+            <div class='property'>
+            <div class='option'>
+             <a href=?propertyId={$key}><img src='./img/del.png' ></a>
+            </div>
+            <img style='height:200px; border-radius:15px 15px 0 0' src='{$property['image']}' alt='{$property['title']}' class='property-img'>
+            <div style='padding: 0 1rem;'>
+              <div class='feature'>
+                <img src='./img/loc.png'>
+                <span>{$property['location']}</span>
+              </div>
+              <h2>{$property['title']}</h2>
+              <p>{$property['description']}</p>
+              <div class='pro-features'>
+                <div class='feature'>
+                  <img src='./img/bed.png'>
+                  <span>{$property['bedroom']} Bedrooms</span>
                 </div>
-            </form>
-        </div>
-        <div class="row">
-            <?php
-            if (isset($_GET['category']) && $_GET['category'] != '') {
-                $obj->filterProduct(strtolower($_GET['category']), $products);
-            } else {
-                $obj->displayProduct($products);
-            }
-            ?>
-        </div>
-    </div>
-</body>
-
-</html>
+                <div class='feature'>
+                  <img src='./img/bathroom.png'>
+                  <span>{$property['bathroom']} Bathrooms</span>
+                </div>
+                <div class='feature'>
+                  <img src='./img/square.png'>
+                  <span>{$property['square']} sq ft.</span>
+                </div>
+                <div class='feature'>
+                  <img src='./img/car.png'>
+                  <span>{$property['garage']} Garages</span>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class='pro-footer'>
+              <p class='price'>\${$property['price']}</p>
+              <a href=?addToCartId={$key} class='button'>Add to cart</a>
+            </div>
+          </div>
+          EOD;
+    }
+  } else {
+    echo "<h1 class='not-found'>No property found</h1>";
+  }
+  ?>
+</div>
+</div>
+<?php require_once('./template/footer.php'); ?>
