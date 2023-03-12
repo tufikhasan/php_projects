@@ -69,10 +69,22 @@ if (isset($_POST['name'])) {
 }
 //Delete student
 if ('delete' == $task) {
-  $id = $_GET['id'];
-  if ($id > 0) {
-    deleteStudent($id);
+  if (!hasPrivilege()) {
     header('Location: index.php?task=report');
+    return;
+  } else {
+    $id = $_GET['id'];
+    if ($id > 0) {
+      deleteStudent($id);
+      header('Location: index.php?task=report');
+    }
+  }
+}
+//edit privilege
+if ('edit' == $task) {
+  if (!hasPrivilege()) {
+    header('Location: index.php?task=report');
+    return;
   }
 }
 ?>

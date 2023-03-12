@@ -5,17 +5,17 @@ function seed()
 {
     $data = [
         [
-            'id' => 1,
+            'id'   => 1,
             'name' => "Tufik",
             'roll' => 5,
         ],
         [
-            'id' => 2,
+            'id'   => 2,
             'name' => "Shehab",
             'roll' => 6,
         ],
         [
-            'id' => 3,
+            'id'   => 3,
             'name' => "Tarif",
             'roll' => 7,
         ],
@@ -33,13 +33,21 @@ function allStudents()
         <tr>
             <th>Name</th>
             <th>Roll</th>
-            <th>Action</th>
+            <?php if (hasPrivilege()) {
+                echo "<th>Action</th>";
+            } ?>
         </tr>
         <?php foreach ($students as $student) { ?>
             <tr>
                 <td><?php printf('%s', $student['name']); ?></td>
                 <td><?php printf('%s', $student['roll']); ?></td>
-                <td><?php printf('<a href="index.php?task=edit&id=%s">Edit</a> | <a class="delete" href="index.php?task=delete&id=%s">Delete</a>', $student['id'], $student['id']); ?></td>
+                <?php if (isAdmin()) : ?>
+                    <td width="150px"><?php printf('<a href="index.php?task=edit&id=%s">Edit</a> | <a class="delete" href="index.php?task=delete&id=%s">Delete</a>', $student['id'], $student['id']); ?></td>
+                <?php elseif (isEditor()) : ?>
+                    <td width="150px"><?php printf('<a href="index.php?task=edit&id=%s">Edit</a>', $student['id']); ?></td>
+                <?php endif; ?>
+
+
             </tr>
 
         <?php } ?>
@@ -70,7 +78,7 @@ function addStudent($name, $roll)
     }
     if (!$found) {
         $student = [
-            'id' => getUniqueId($students),
+            'id'   => getUniqueId($students),
             'name' => $name,
             'roll' => $roll,
         ];
@@ -127,4 +135,25 @@ function deleteStudent($id)
     }
     $serialized = serialize($students);
     file_put_contents(DB_NAME, $serialized, LOCK_EX);
+}
+//is role admin check function
+function isAdmin()
+{
+    if (isset($_SESSION['role'])) {
+        return ('admin' == $_SESSION['role']);
+    }
+}
+//is role editor check function
+function isEditor()
+{
+    if (isset($_SESSION['role'])) {
+        return ('editor' == $_SESSION['role']);
+    }
+}
+//is role admin or editor check function
+function hasPrivilege()
+{
+    if (isset($_SESSION['role'])) {
+        return ('admin' == $_SESSION['role'] || 'editor' == $_SESSION['role']);
+    }
 }
