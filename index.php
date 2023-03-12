@@ -1,4 +1,35 @@
 <?php require_once "inc/functions.php";
+session_name('MyApp');
+session_start([
+  'cookie_lifetime' => 300,
+]);
+//login system
+$invalidInfo = false;
+$fOpen = fopen('db/user.txt', 'r');
+if (isset($_POST['username']) && isset($_POST['password'])) {
+  $_SESSION['login'] = false;
+  $_SESSION['user'] = false;
+  $_SESSION['role'] = false;
+  while ($data = fgetcsv($fOpen)) {
+    if ($data[0] == $_POST['username'] && $data[1] == sha1($_POST['password'])) {
+      $_SESSION['login'] = true;
+      $_SESSION['user'] = $_POST['username'];
+      $_SESSION['role'] = $data[2];
+      header('Location: index.php');
+    }
+    if (!$_SESSION['login']) {
+      $invalidInfo = true;
+    }
+  }
+}
+//logout
+if (isset($_GET['logout'])) {
+  $_SESSION['login'] = false;
+  $_SESSION['user'] = false;
+  $_SESSION['role'] = false;
+  session_destroy();
+  header('Location: index.php?task=report');
+}
 
 $info = '';
 $task = $_GET['task'] ?? 'report';
@@ -65,19 +96,17 @@ if ('delete' == $task) {
   a {
     margin-right: 10px;
   }
+
+  p {
+    margin-bottom: .5rem;
+  }
 </style>
 
 <body>
   <div class="container">
-    <!-- Hero area -->
     <div class="row">
       <div class="column column-50 column-offset-25">
         <h2>Students Crud Project</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus tenetur natus qui molestias temp</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="column column-50 column-offset-25">
         <?php
         //include navigation
         include_once "inc/nav.php";
@@ -132,6 +161,25 @@ if ('delete' == $task) {
             <label for="roll">Roll</label>
             <input type="number" name="roll" id="roll" placeholder="student roll..." value="<?php echo $student['roll']; ?>">
             <input type="submit" value="Update" />
+          </form>
+        <?php } ?>
+      </div>
+    </div>
+    <!-- Login Form -->
+    <div class="row">
+      <div class="column column-50 column-offset-25">
+        <?php if ('login' == $task) {
+          //Validation message
+          if ($invalidInfo) {
+            echo "<blockquote>Invalid username and password</blockquote>";
+          }
+        ?>
+          <form method="POST">
+            <label for="name">Username</label>
+            <input type="text" name="username" id="name">
+            <label for="pass">Password</label>
+            <input type="password" name="password" id="pass">
+            <input type="submit" value="Login">
           </form>
         <?php } ?>
       </div>
